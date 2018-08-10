@@ -1,0 +1,1 @@
+# SwipeableRecyclerViewCell-android
