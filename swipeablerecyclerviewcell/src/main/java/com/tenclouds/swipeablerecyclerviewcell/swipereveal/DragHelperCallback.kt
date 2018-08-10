@@ -10,6 +10,9 @@ import com.tenclouds.swipeablerecyclerviewcell.swipereveal.interfaces.OpenCloseL
 import com.tenclouds.swipeablerecyclerviewcell.utils.pxToDp
 import kotlin.math.abs
 
+/**
+ * Based on draghelper from: https://github.com/chthai64/SwipeRevealLayout/blob/master/swipe-reveal-layout/src/main/java/com/chauthai/swipereveallayout/SwipeRevealLayout.java
+ */
 
 internal class DragHelperCallback(
         var lockDrag: () -> Boolean,

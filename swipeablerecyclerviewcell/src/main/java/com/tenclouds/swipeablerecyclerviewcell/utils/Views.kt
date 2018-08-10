@@ -50,6 +50,7 @@ internal fun valueAnimatorOfFloat(
 }
 
 internal fun Canvas.drawConnector(movementProgress: Float, connectorHolder: ConnectorHolder, connectorPaint: Paint) {
+    //stop drawing connector when view is opened
     if (movementProgress > 0.95f) return
 
     with(connectorHolder) {
