@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SwipeRevealLayout">
+        <attr name="dragFromEdge">
+            <flag name="left" value="1" />
+            <flag name="right" value="2" />
+        </attr>
+
+        <attr name="opened" format="boolean" />
+
+        <attr name="leftIconBgColor" format="color" />
+        <attr name="rightIconBgColor" format="color" />
+        <attr name="connectorColor" format="color" />
+
+        <attr name="leftIcon" format="reference" />
+        <attr name="rightIcon" format="reference" />
+
+        <attr name="iconsPadding" format="dimension" />
+        <attr name="iconsSize" format="dimension" />
+        <attr name="iconsDistance" format="dimension" />
+        <attr name="revealedViewMarginStart" format="dimension" />
+        <attr name="revealedViewMarginEnd" format="dimension" />
+
+        <attr name="revealedViewBackground" format="reference|color" />
+    </declare-styleable>
+
+</resources>

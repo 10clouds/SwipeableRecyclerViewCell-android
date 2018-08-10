@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SwipeableRecycler</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="work_status">&#8226; %s</string>
+    <string name="swipe_to_delete">Swipe to delete</string>
+    <string name="swipe_to_delete_desc">Swipe your items left from\nlist to delete the boxes</string>
+</resources>

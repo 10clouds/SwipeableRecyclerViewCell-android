@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.tenclouds.swipeablerecycler.adapter.Message" />
+    </data>
+
+    <com.tenclouds.swipeablerecyclerviewcell.swipereveal.SwipeRevealLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        app:connectorColor="@color/redDelete"
+        app:dragFromEdge="right"
+        app:iconsDistance="20dp"
+        app:iconsPadding="14dp"
+        app:iconsSize="40dp"
+        app:leftIcon="@drawable/ic_fav"
+        app:leftIconBgColor="@color/gretFavorite"
+        app:opened="@{item.viewOpened}"
+        app:revealedViewBackground="@android:color/transparent"
+        app:revealedViewMarginEnd="24dp"
+        app:revealedViewMarginStart="0dp"
+        app:rightIcon="@drawable/ic_delete"
+        app:rightIconBgColor="@color/redDelete"
+        tools:background="@color/greyFavourite">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal"
+            android:paddingEnd="24dp"
+            android:paddingStart="24dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ivAvatar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="1dp"
+                app:drawableSrc="@{item.avatar}"
+                tools:src="@drawable/avatar1" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/vBg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_rounded_corners_message"
+                android:minHeight="80dp"
+                android:padding="22dp">
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    style="@style/MediumTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:text="@{item.title}"
+                    android:textColor="@color/textItemTitle"
+                    android:textSize="@dimen/medium_font"
+                    app:layout_constraintBottom_toTopOf="@id/tvMessage"
+                    app:layout_constraintStart_toStartOf="@id/vBg"
+                    app:layout_constraintTop_toTopOf="@id/vBg"
+                    tools:text="Eric Snyder" />
+
+                <TextView
+                    android:id="@+id/tvMessage"
+                    style="@style/RegularTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="@{item.message}"
+                    android:textColor="@color/textColor"
+                    android:textSize="@dimen/small_font"
+                    app:layout_constraintBottom_toBottomOf="@id/vBg"
+                    app:layout_constraintStart_toStartOf="@id/tvTitle"
+                    app:layout_constraintTop_toBottomOf="@id/tvTitle"
+                    tools:text="is a fir native to the mountains…\n21 items | London UK" />
+
+                <TextView
+                    android:id="@+id/tvStatus"
+                    style="@style/BoldTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/small_font"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tvTitle"
+                    app:layout_constraintStart_toEndOf="@id/tvTitle"
+                    app:workStatus="@{item.status}"
+                    tools:text="&#8226; Work" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </LinearLayout>
+
+    </com.tenclouds.swipeablerecyclerviewcell.swipereveal.SwipeRevealLayout>
+</layout>
