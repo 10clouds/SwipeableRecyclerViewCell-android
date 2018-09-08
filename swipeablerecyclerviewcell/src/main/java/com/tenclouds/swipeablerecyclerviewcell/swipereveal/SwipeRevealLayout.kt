@@ -16,10 +16,8 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import com.tenclouds.swipeablerecyclerviewcell.R
-import com.tenclouds.swipeablerecyclerviewcell.metaball.LEFT_VIEW_TO_DELETE
 import com.tenclouds.swipeablerecyclerviewcell.metaball.MetaBalls
 import com.tenclouds.swipeablerecyclerviewcell.metaball.NONE_VIEW_TO_DELETE
-import com.tenclouds.swipeablerecyclerviewcell.metaball.RIGHT_VIEW_TO_DELETE
 import com.tenclouds.swipeablerecyclerviewcell.swipereveal.interfaces.OnDeleteListener
 import com.tenclouds.swipeablerecyclerviewcell.swipereveal.interfaces.OnIconClickListener
 import com.tenclouds.swipeablerecyclerviewcell.swipereveal.interfaces.OnSwipeListener
@@ -62,9 +60,9 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
     private var revealedViewBackground = 0
     private var distanceBetweenIcons = 0
     private var iconPadding = 0
-    private var rVIconsSize = 0
-    private var rVMarginStart = 0
-    private var rVMarginEnd = 0
+    private var revealedIconsSize = 0
+    private var revealedMarginStart = 0
+    private var revealedMarginEnd = 0
 
     private var dragDist = 0f
     private var prevX = -1f
@@ -87,7 +85,7 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
             onOpened: () -> Unit = {},
             onClosed: () -> Unit = {},
             onSlide: (Float) -> Unit = {}) {
-        setOnSwipeListener(object: OnSwipeListener {
+        setOnSwipeListener(object : OnSwipeListener {
             override fun onClosed() = onOpened()
             override fun onOpened() = onClosed()
             override fun slide(progress: Float) = onSlide(progress)
@@ -118,7 +116,8 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
         init(context, attrs)
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int)
+            : super(context, attrs, defStyleAttr) {
         init(context, attrs)
     }
 
@@ -130,20 +129,32 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
                     0, 0
             )
 
-            dragEdge = a.getInteger(R.styleable.SwipeRevealLayout_dragFromEdge, DRAG_EDGE_LEFT)
-            leftIconRes = a.getResourceId(R.styleable.SwipeRevealLayout_leftIcon, R.drawable.ic_fav)
-            rightIconRes = a.getResourceId(R.styleable.SwipeRevealLayout_rightIcon, R.drawable.ic_delete)
+            dragEdge = a.getInteger(R.styleable.SwipeRevealLayout_dragFromEdge,
+                    DRAG_EDGE_LEFT)
+            leftIconRes = a.getResourceId(R.styleable.SwipeRevealLayout_leftIcon,
+                    R.drawable.ic_fav)
+            rightIconRes = a.getResourceId(R.styleable.SwipeRevealLayout_rightIcon,
+                    R.drawable.ic_delete)
 
-            revealedConnectorViewColor = a.getColor(R.styleable.SwipeRevealLayout_connectorColor, ContextCompat.getColor(context, R.color.redDelete))
-            revealedLeftViewColor = a.getColor(R.styleable.SwipeRevealLayout_leftIconBgColor, ContextCompat.getColor(context, R.color.greyFavourite))
-            revealedRightViewColor = a.getColor(R.styleable.SwipeRevealLayout_rightIconBgColor, ContextCompat.getColor(context, R.color.redDelete))
-            revealedViewBackground = a.getResourceId(R.styleable.SwipeRevealLayout_revealedViewBackground, android.R.color.transparent)
+            revealedConnectorViewColor = a.getColor(R.styleable.SwipeRevealLayout_connectorColor,
+                    ContextCompat.getColor(context, R.color.redDelete))
+            revealedLeftViewColor = a.getColor(R.styleable.SwipeRevealLayout_leftIconBgColor,
+                    ContextCompat.getColor(context, R.color.greyFavourite))
+            revealedRightViewColor = a.getColor(R.styleable.SwipeRevealLayout_rightIconBgColor,
+                    ContextCompat.getColor(context, R.color.redDelete))
+            revealedViewBackground = a.getResourceId(
+                    R.styleable.SwipeRevealLayout_revealedViewBackground,
+                    android.R.color.transparent
+            )
 
-            distanceBetweenIcons = a.getDimensionPixelSize(R.styleable.SwipeRevealLayout_iconsDistance, resources.getDimensionPixelSize(R.dimen.default_icons_distance))
+            distanceBetweenIcons = a.getDimensionPixelSize(
+                    R.styleable.SwipeRevealLayout_iconsDistance, resources.getDimensionPixelSize(R.dimen.default_icons_distance))
             iconPadding = a.getDimensionPixelSize(R.styleable.SwipeRevealLayout_iconsPadding, resources.getDimensionPixelSize(R.dimen.default_icons_padding))
-            rVIconsSize = a.getDimensionPixelSize(R.styleable.SwipeRevealLayout_iconsSize, resources.getDimensionPixelSize(R.dimen.default_icons_size))
-            rVMarginStart = a.getDimensionPixelSize(R.styleable.SwipeRevealLayout_revealedViewMarginStart, resources.getDimensionPixelSize(R.dimen.default_icons_margin))
-            rVMarginEnd = a.getDimensionPixelSize(R.styleable.SwipeRevealLayout_revealedViewMarginEnd, resources.getDimensionPixelSize(R.dimen.default_icons_margin))
+            revealedIconsSize = a.getDimensionPixelSize(R.styleable.SwipeRevealLayout_iconsSize, resources.getDimensionPixelSize(R.dimen.default_icons_size))
+            revealedMarginStart = a.getDimensionPixelSize(
+                    R.styleable.SwipeRevealLayout_revealedViewMarginStart, resources.getDimensionPixelSize(R.dimen.default_icons_margin))
+            revealedMarginEnd = a.getDimensionPixelSize(
+                    R.styleable.SwipeRevealLayout_revealedViewMarginEnd, resources.getDimensionPixelSize(R.dimen.default_icons_margin))
         }
 
         minFlingVelocity = DEFAULT_MIN_FLING_VELOCITY
@@ -169,10 +180,10 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
             setBackgroundResource(revealedViewBackground)
 
             configureIconsView(
-                    rVMarginStart,
-                    rVMarginEnd,
+                    revealedMarginStart,
+                    revealedMarginEnd,
                     distanceBetweenIcons,
-                    rVIconsSize,
+                    revealedIconsSize,
                     iconPadding
             )
         }

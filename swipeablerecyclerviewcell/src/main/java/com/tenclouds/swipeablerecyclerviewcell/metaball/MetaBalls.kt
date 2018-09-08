@@ -48,31 +48,33 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
 
     private val connectorPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
 
-    var rightViewColor: Int by Delegates.observable(ContextCompat.getColor(context, R.color.redDelete)) { _, _, new ->
-        rightCircle.paint.color = new
-    }
+    var rightViewColor: Int by Delegates.observable(
+            ContextCompat.getColor(context, R.color.redDelete))
+    { _, _, new -> rightCircle.paint.color = new }
 
-    var leftViewColor: Int by Delegates.observable(ContextCompat.getColor(context, R.color.greyFavourite)) { _, _, new ->
-        leftCircle.paint.color = new
-    }
+    var leftViewColor: Int by Delegates.observable(
+            ContextCompat.getColor(context, R.color.greyFavourite))
+    { _, _, new -> leftCircle.paint.color = new }
 
-    var connectorColor: Int by Delegates.observable(ContextCompat.getColor(context, R.color.redDelete)) { _, _, new ->
-        connectorPaint.color = new
-    }
+    var connectorColor: Int by Delegates.observable(
+            ContextCompat.getColor(context, R.color.redDelete))
+    { _, _, new -> connectorPaint.color = new }
 
-    var leftIconResId: Int by Delegates.observable(R.drawable.ic_fav) { _, _, new ->
-        leftView.setImageResource(new)
-    }
+    var leftIconResId: Int by Delegates.observable(
+            R.drawable.ic_fav)
+    { _, _, new -> leftView.setImageResource(new) }
 
-    var rightIconResId: Int by Delegates.observable(R.drawable.ic_delete) { _, _, new ->
-        rightView.setImageResource(new)
-    }
+    var rightIconResId: Int by Delegates.observable(
+            R.drawable.ic_delete)
+    { _, _, new -> rightView.setImageResource(new) }
 
     private var movementProgress = 0f
         set(value) {
             val startWhenProgress = 0.6f
             val diffRangeLimitOne = 1 - startWhenProgress
-            field = if (value in 0.0f..startWhenProgress) 0f else (value - startWhenProgress) * 1.div(diffRangeLimitOne)
+            field =
+                    if (value in 0.0f..startWhenProgress) 0f
+                    else (value - startWhenProgress) * 1.div(diffRangeLimitOne)
         }
 
     constructor(context: Context) : super(context) {
@@ -83,7 +85,8 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
         init()
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) :
+            super(context, attrs, defStyleAttr) {
         init()
     }
 
@@ -147,12 +150,13 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
         startingRevealedParentX = 0f
     }
 
-    private fun clickAnimator(circle: Circle, viewColor: Int) = valueAnimatorOfFloat(1f, maxViewScale, 1f,
-            updateListener = {
-                circle.radius = calculatedSelectorRadius * it
-                circle.paint.color = viewColor.blend(Color.WHITE, it - 1f)
-                invalidate()
-            }).setDuration(300)
+    private fun clickAnimator(circle: Circle, viewColor: Int) =
+            valueAnimatorOfFloat(1f, maxViewScale, 1f,
+                    updateListener = {
+                        circle.radius = calculatedSelectorRadius * it
+                        circle.paint.color = viewColor.blend(Color.WHITE, it - 1f)
+                        invalidate()
+                    }).setDuration(300)
 
     private fun deleteAnimator() =
             valueAnimatorOfFloat(0f, 1f,
@@ -302,13 +306,12 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
     private fun connectorPaintAlpha(progress: Float): Int {
         val startWhenProgress = 0.85f
         val diffRangeLimitOne = 1 - startWhenProgress
-        return if (progress in 0.0f..startWhenProgress)
-            255
-        else
-            255 - ((progress - startWhenProgress) * 1.div(diffRangeLimitOne) * 255).toInt()
+        return if (progress in 0.0f..startWhenProgress) 255
+        else 255 - ((progress - startWhenProgress) * 1.div(diffRangeLimitOne) * 255).toInt()
     }
 
-    private fun calculateBlobConnector(originRadius: Float, origin: Point, destination: Point): ConnectorHolder {
+    private fun calculateBlobConnector(originRadius: Float, origin: Point, destination: Point)
+            : ConnectorHolder {
         val v = 0.4f
         val handleLenRate = 2.4f
         val distanceBetweenCircles = getDistance(origin, destination)
@@ -317,7 +320,8 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
         val radiusSum = originRadius * 2
 
         val arc = if (distanceBetweenCircles < radiusSum) {
-            acos((originRadius * originRadius + distanceBetweenCircles * distanceBetweenCircles - originRadius * originRadius)
+            acos((originRadius * originRadius + distanceBetweenCircles * distanceBetweenCircles
+                    - originRadius * originRadius)
                     / (2f * originRadius * distanceBetweenCircles))
         } else {
             0.0f
@@ -347,10 +351,7 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
         val p2a = Point(p2aTemp.x + destination.x, p2aTemp.y + destination.y)
         val p2b = Point(p2bTemp.x + destination.x, p2bTemp.y + destination.y)
         // Define handle length by the distance between both ends of the curve to draw
-        val diffp1p2 = Point(
-                p1a.x - p2a.x,
-                p1a.y - p2a.y
-        )
+        val diffp1p2 = Point(p1a.x - p2a.x, p1a.y - p2a.y)
 
         val minDist = min(v * handleLenRate, getLength(diffp1p2.x, diffp1p2.y) / radiusSum)
         val radius = originRadius * minDist

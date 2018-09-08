@@ -15,7 +15,8 @@ import com.tenclouds.swipeablerecyclerviewcell.metaball.ConnectorHolder
 
 
 internal fun pxToDp(px: Int, context: Context): Int =
-        (px / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)).toInt()
+        (px / (context.resources.displayMetrics.densityDpi.toFloat()
+                / DisplayMetrics.DENSITY_DEFAULT)).toInt()
 
 internal fun View.getCenter() =
         Point(left + measuredWidth / 2f, top + measuredHeight / 2f)
@@ -47,7 +48,9 @@ internal fun valueAnimatorOfFloat(
         }
 
 
-internal fun Canvas.drawConnector(movementProgress: Float, connectorHolder: ConnectorHolder, connectorPaint: Paint) {
+internal fun Canvas.drawConnector(movementProgress: Float,
+                                  connectorHolder: ConnectorHolder,
+                                  connectorPaint: Paint) {
     //stop drawing connector when view is opened
     if (movementProgress > 0.95f) return
 

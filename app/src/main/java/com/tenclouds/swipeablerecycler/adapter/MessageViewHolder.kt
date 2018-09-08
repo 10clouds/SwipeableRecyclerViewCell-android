@@ -7,7 +7,8 @@ import com.tenclouds.swipeablerecyclerviewcell.metaball.RIGHT_VIEW_TO_DELETE
 import com.tenclouds.swipeablerecyclerviewcell.swipereveal.SwipeRevealLayout
 
 
-class MessageViewHolder(val b: VhMessageBinding, val endAction: (Message) -> Unit) : RecyclerView.ViewHolder(b.root) {
+class MessageViewHolder(val b: VhMessageBinding, val endAction: (Message) -> Unit)
+    : RecyclerView.ViewHolder(b.root) {
 
     fun bind(item: Message) {
         b.item = item
@@ -20,8 +21,11 @@ class MessageViewHolder(val b: VhMessageBinding, val endAction: (Message) -> Uni
                             onOpened = { item.viewOpened = true }
                     )
                     setOnIconClickListener(
-                            onLeftIconClick = { Toast.makeText(b.root.context, "LEFT", Toast.LENGTH_LONG).show() },
-                            //If the deleteView is set to the right then this call will be delayed for 300ms for animation of deleting to finish
+                            onLeftIconClick = {
+                                Toast.makeText(b.root.context, "LEFT", Toast.LENGTH_LONG).show()
+                            },
+                            //If the deleteView is set to the right then this call will be delayed
+                            //for 300ms for animation of deleting to finish
                             onRightIconClick = { endAction(item) },
                             sideToDelete = RIGHT_VIEW_TO_DELETE
                     )

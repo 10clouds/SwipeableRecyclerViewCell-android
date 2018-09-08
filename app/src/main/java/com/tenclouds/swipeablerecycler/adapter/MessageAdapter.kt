@@ -9,8 +9,9 @@ import com.tenclouds.swipeablerecycler.R
 import com.tenclouds.swipeablerecycler.databinding.VhMessageBinding
 
 
-class MessageAdapter(private val list: MutableList<Message>) : RecyclerView.Adapter<MessageViewHolder>() {
-    
+class MessageAdapter(private val list: MutableList<Message>)
+    : RecyclerView.Adapter<MessageViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding: ViewDataBinding =
