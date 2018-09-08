@@ -302,7 +302,10 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
     private fun connectorPaintAlpha(progress: Float): Int {
         val startWhenProgress = 0.85f
         val diffRangeLimitOne = 1 - startWhenProgress
-        return if (progress in 0.0f..startWhenProgress) 255 else 255 - ((progress - startWhenProgress) * 1.div(diffRangeLimitOne) * 255).toInt()
+        return if (progress in 0.0f..startWhenProgress)
+            255
+        else
+            255 - ((progress - startWhenProgress) * 1.div(diffRangeLimitOne) * 255).toInt()
     }
 
     private fun calculateBlobConnector(originRadius: Float, origin: Point, destination: Point): ConnectorHolder {
@@ -358,8 +361,7 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
         val segment3 = getVector(angle2b - pi2, radius)
         val segment4 = getVector(angle1b + pi2, radius)
 
-        return ConnectorHolder(
-                p1a, p2a, p1b, p2b, segment1, segment2, segment3, segment4)
+        return ConnectorHolder(p1a, p2a, p1b, p2b, segment1, segment2, segment3, segment4)
     }
 
 }

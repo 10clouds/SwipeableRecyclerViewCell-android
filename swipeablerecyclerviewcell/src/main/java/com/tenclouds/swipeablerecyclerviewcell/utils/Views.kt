@@ -20,34 +20,32 @@ internal fun pxToDp(px: Int, context: Context): Int =
 internal fun View.getCenter() =
         Point(left + measuredWidth / 2f, top + measuredHeight / 2f)
 
-internal fun View.padding(paddingInPx: Int) {
-    this.setPadding(paddingInPx, paddingInPx, paddingInPx, paddingInPx)
-}
+internal fun View.padding(paddingInPx: Int) =
+        this.setPadding(paddingInPx, paddingInPx, paddingInPx, paddingInPx)
+
 
 internal fun valueAnimatorOfFloat(
         vararg values: Float,
         updateListener: (Float) -> Unit = {},
         onAnimStart: () -> Unit = {},
-        onAnimEnd: () -> Unit = {}): ValueAnimator {
-
-    return ValueAnimator.ofFloat(*values)
-            .apply {
-                addUpdateListener {
-                    updateListener.invoke(it.animatedValue as Float)
-                }
-                addListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator?) {
-                        onAnimEnd()
-                        super.onAnimationEnd(animation)
-                    }
-
-                    override fun onAnimationStart(animation: Animator?) {
-                        onAnimStart()
-                        super.onAnimationStart(animation)
-                    }
-                })
+        onAnimEnd: () -> Unit = {}): ValueAnimator = ValueAnimator.ofFloat(*values)
+        .apply {
+            addUpdateListener {
+                updateListener.invoke(it.animatedValue as Float)
             }
-}
+            addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    onAnimEnd()
+                    super.onAnimationEnd(animation)
+                }
+
+                override fun onAnimationStart(animation: Animator?) {
+                    onAnimStart()
+                    super.onAnimationStart(animation)
+                }
+            })
+        }
+
 
 internal fun Canvas.drawConnector(movementProgress: Float, connectorHolder: ConnectorHolder, connectorPaint: Paint) {
     //stop drawing connector when view is opened
@@ -88,6 +86,6 @@ internal fun Canvas.drawConnector(movementProgress: Float, connectorHolder: Conn
     }
 }
 
-internal fun @receiver:ColorInt Int.blend(color: Int, ratio: Float): Int {
-    return ColorUtils.blendARGB(this, color, ratio)
-}
+internal fun @receiver:ColorInt Int.blend(color: Int, ratio: Float): Int =
+        ColorUtils.blendARGB(this, color, ratio)
+
