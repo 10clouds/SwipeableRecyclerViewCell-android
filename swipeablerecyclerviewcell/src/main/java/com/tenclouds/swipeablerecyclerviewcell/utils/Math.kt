@@ -7,7 +7,10 @@ import kotlin.math.sqrt
 
 
 internal data class Point(var x: Float = 0.0f,
-                          var y: Float = 0.0f)
+                          var y: Float = 0.0f) {
+    operator fun plus(p2: Point): Point =
+        Point(x + p2.x, y + p2.y)
+}
 
 internal data class Circle(var position: Point = Point(),
                            var radius: Float = 0f,

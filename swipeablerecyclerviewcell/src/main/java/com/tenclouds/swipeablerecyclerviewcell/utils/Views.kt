@@ -56,32 +56,32 @@ internal fun Canvas.drawConnector(movementProgress: Float,
 
     with(connectorHolder) {
         with(Path()) {
-            moveTo(p1a.x, p1a.y)
+            moveTo(topBezierStart.x, topBezierStart.y)
             // Curve 1
             cubicTo(
-                    p1a.x + segment1.x,
-                    p1a.y + segment1.y,
-                    p2a.x + segment2.x,
-                    p2a.y + segment2.y,
-                    p2a.x,
-                    p2a.y
+                    topBezierFirstControlPoint.x,
+                    topBezierFirstControlPoint.y,
+                    topBezierSecondControlPoint.x,
+                    topBezierSecondControlPoint.y,
+                    topBezierEnd.x,
+                    topBezierEnd.y
             )
 
             // Line 1
-            lineTo(p2b.x, p2b.y)
+            lineTo(bottomBezierEnd.x, bottomBezierEnd.y)
 
             // Curve 2
             cubicTo(
-                    p2b.x + segment3.x,
-                    p2b.y + segment3.y,
-                    p1b.x + segment4.x,
-                    p1b.y + segment4.y,
-                    p1b.x,
-                    p1b.y
+                    bottomBezierFirstControlPoint.x,
+                    bottomBezierFirstControlPoint.y,
+                    bottomBezierSecondControlPoint.x,
+                    bottomBezierSecondControlPoint.y,
+                    bottomBezierStart.x,
+                    bottomBezierStart.y
             )
 
             // Line 2
-            lineTo(p1a.x, p1a.y)
+            lineTo(topBezierStart.x, topBezierStart.y)
             close()
 
             drawPath(this, connectorPaint)
