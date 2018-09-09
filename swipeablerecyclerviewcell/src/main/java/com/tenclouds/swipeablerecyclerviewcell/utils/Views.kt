@@ -7,11 +7,13 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
+import android.os.Build
 import android.support.annotation.ColorInt
 import android.support.v4.graphics.ColorUtils
 import android.util.DisplayMetrics
 import android.view.View
 import com.tenclouds.swipeablerecyclerviewcell.metaball.ConnectorHolder
+import java.util.concurrent.atomic.AtomicInteger
 
 
 internal fun pxToDp(px: Int, context: Context): Int =
@@ -92,3 +94,19 @@ internal fun Canvas.drawConnector(movementProgress: Float,
 internal fun @receiver:ColorInt Int.blend(color: Int, ratio: Float): Int =
         ColorUtils.blendARGB(this, color, ratio)
 
+private val sNextGeneratedId = AtomicInteger(1)
+fun View.generateViewId(): Int {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        return View.generateViewId()
+    } else {
+        while (true) {
+            val result = sNextGeneratedId.get()
+            // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
+            var newValue = result + 1
+            if (newValue > 0x00FFFFFF) newValue = 1 // Roll over to 1, not 0.
+            if (sNextGeneratedId.compareAndSet(result, newValue)) {
+                return result
+            }
+        }
+    }
+}

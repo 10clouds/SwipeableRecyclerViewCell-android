@@ -115,11 +115,13 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
         rightView.apply {
             layoutParams = rightLp
             padding(iconsPadding)
+            id = generateViewId()
         }
 
         leftView.apply {
             layoutParams = leftLp
             padding(iconsPadding)
+            id = generateViewId()
         }
     }
 

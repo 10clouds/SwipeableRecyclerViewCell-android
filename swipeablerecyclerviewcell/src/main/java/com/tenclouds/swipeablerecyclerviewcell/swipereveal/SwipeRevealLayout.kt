@@ -22,6 +22,7 @@ import com.tenclouds.swipeablerecyclerviewcell.swipereveal.interfaces.OnDeleteLi
 import com.tenclouds.swipeablerecyclerviewcell.swipereveal.interfaces.OnIconClickListener
 import com.tenclouds.swipeablerecyclerviewcell.swipereveal.interfaces.OnSwipeListener
 import com.tenclouds.swipeablerecyclerviewcell.swipereveal.interfaces.OpenCloseListener
+import com.tenclouds.swipeablerecyclerviewcell.utils.generateViewId
 
 /**
  * Stripped down version of: https://github.com/chthai64/SwipeRevealLayout
@@ -186,6 +187,8 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
                     revealedIconsSize,
                     iconPadding
             )
+
+            id = generateViewId()
         }
 
         if (getChildAt(0) != metaBalls) {
