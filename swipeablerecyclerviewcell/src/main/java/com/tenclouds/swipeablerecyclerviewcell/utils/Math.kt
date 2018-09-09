@@ -17,7 +17,7 @@ internal data class Circle(var position: Point = Point(),
                            val paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
                                    .apply { style = Paint.Style.FILL })
 
-internal fun getVector(radianAngle: Float, length: Float) =
+internal fun getVectorFrom(radianAngle: Float, length: Float) =
         Point(cos(radianAngle) * length, sin(radianAngle) * length)
 
 
@@ -28,4 +28,4 @@ internal fun getDistance(p1: Point, p2: Point): Float {
     return sqrt(distX * distX + distY * distY)
 }
 
-internal fun getLength(x1: Float, x2: Float) = sqrt(x1 * x1 + x2 * x2)
+internal fun getVectorLength(x: Float, y: Float) = sqrt(x * x + y * y)

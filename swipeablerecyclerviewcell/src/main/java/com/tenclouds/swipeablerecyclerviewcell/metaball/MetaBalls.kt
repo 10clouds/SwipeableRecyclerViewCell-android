@@ -341,10 +341,10 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
         val angle2a = (angle1 + Math.PI - arc - (Math.PI - arc - angle2) * v).toFloat()
         val angle2b = (angle1 - Math.PI + arc + (Math.PI - arc - angle2) * v).toFloat()
 
-        val p1aTemp = getVector(angle1a, originRadius)
-        val p1bTemp = getVector(angle1b, originRadius)
-        val p2aTemp = getVector(angle2a, originRadius)
-        val p2bTemp = getVector(angle2b, originRadius)
+        val p1aTemp = getVectorFrom(angle1a, originRadius)
+        val p1bTemp = getVectorFrom(angle1b, originRadius)
+        val p2aTemp = getVectorFrom(angle2a, originRadius)
+        val p2bTemp = getVectorFrom(angle2b, originRadius)
 
         val p1a = Point(p1aTemp.x + origin.x, p1aTemp.y + origin.y)
         val p1b = Point(p1bTemp.x + origin.x, p1bTemp.y + origin.y)
@@ -353,14 +353,14 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
         // Define handle length by the distance between both ends of the curve to draw
         val diffp1p2 = Point(p1a.x - p2a.x, p1a.y - p2a.y)
 
-        val minDist = min(v * handleLenRate, getLength(diffp1p2.x, diffp1p2.y) / radiusSum)
+        val minDist = min(v * handleLenRate, getVectorLength(diffp1p2.x, diffp1p2.y) / radiusSum)
         val radius = originRadius * minDist
         val pi2 = (PI / 2).toFloat()
 
-        val segment1 = getVector(angle1a - pi2, radius)
-        val segment2 = getVector(angle2a + pi2, radius)
-        val segment3 = getVector(angle2b - pi2, radius)
-        val segment4 = getVector(angle1b + pi2, radius)
+        val segment1 = getVectorFrom(angle1a - pi2, radius)
+        val segment2 = getVectorFrom(angle2a + pi2, radius)
+        val segment3 = getVectorFrom(angle2b - pi2, radius)
+        val segment4 = getVectorFrom(angle1b + pi2, radius)
 
         return ConnectorHolder(p1a, p2a, p1b, p2b, segment1, segment2, segment3, segment4)
     }

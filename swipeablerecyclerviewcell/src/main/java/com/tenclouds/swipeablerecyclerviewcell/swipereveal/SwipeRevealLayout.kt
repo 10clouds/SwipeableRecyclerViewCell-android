@@ -53,13 +53,13 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
     private var dragEdge = DRAG_EDGE_LEFT
     private var leftIconRes = 0
     private var rightIconRes = 0
+    private var distanceBetweenIcons = 0
+    private var iconPadding = 0
+
     private var revealedLeftViewColor = 0
     private var revealedRightViewColor = 0
     private var revealedConnectorViewColor = 0
-
     private var revealedViewBackground = 0
-    private var distanceBetweenIcons = 0
-    private var iconPadding = 0
     private var revealedIconsSize = 0
     private var revealedMarginStart = 0
     private var revealedMarginEnd = 0
