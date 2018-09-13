@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SwipeableRecyclerViewCell</string>
+    <string name="string_test_value">TEST</string>
+</resources>

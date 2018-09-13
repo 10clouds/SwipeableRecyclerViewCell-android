@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.tenclouds.swipeablerecyclerviewcell.swipereveal.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeLayout"
+    app:dragFromEdge="right"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tvText"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="@string/string_test_value" />
+
+</com.tenclouds.swipeablerecyclerviewcell.swipereveal.SwipeRevealLayout>

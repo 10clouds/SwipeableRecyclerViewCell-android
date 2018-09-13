@@ -1,0 +1,13 @@
+<resources>
+    <dimen name="big_font">20sp</dimen>
+    <dimen name="medium_font">16sp</dimen>
+    <dimen name="small_font">13sp</dimen>
+
+    <dimen name="title_top_margin">36dp</dimen>
+    <dimen name="title_start_margin">30dp</dimen>
+    <dimen name="title_bottom_margin">30dp</dimen>
+    <dimen name="title_end_margin">44dp</dimen>
+
+    <dimen name="hand_size">68dp</dimen>
+    <dimen name="hand_icon_padding">22dp</dimen>
+</resources>
