@@ -52,13 +52,11 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
     private var minFlingVelocity = DEFAULT_MIN_FLING_VELOCITY
 
     private var dragEdge = DRAG_EDGE_LEFT
-    private var leftIconRes = 0
-    private var rightIconRes = 0
-    private var distanceBetweenIcons = 0
+    private var iconRes = 0
     private var iconPadding = 0
 
-    private var revealedLeftViewColor = 0
-    private var revealedRightViewColor = 0
+    private var revealedViewColor = 0
+    private var revealedViewEndColor = 0
     private var revealedConnectorViewColor = 0
     private var revealedViewBackground = 0
     private var revealedIconsSize = 0
@@ -130,28 +128,29 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
                     0, 0
             )
 
-            dragEdge = a.getInteger(R.styleable.SwipeRevealLayout_dragFromEdge,
-                    DRAG_EDGE_LEFT)
-            leftIconRes = a.getResourceId(R.styleable.SwipeRevealLayout_leftIcon,
-                    R.drawable.ic_fav)
-            rightIconRes = a.getResourceId(R.styleable.SwipeRevealLayout_rightIcon,
-                    R.drawable.ic_delete)
+            dragEdge = a.getInteger(R.styleable.SwipeRevealLayout_dragFromEdge, DRAG_EDGE_LEFT)
 
+            iconRes = a.getResourceId(R.styleable.SwipeRevealLayout_icon,
+                    R.drawable.ic_delete)
+            R.styleable.SwipeRevealLayout_revealedViewBackground
             revealedConnectorViewColor = a.getColor(R.styleable.SwipeRevealLayout_connectorColor,
-                    ContextCompat.getColor(context, R.color.redDelete))
-            revealedLeftViewColor = a.getColor(R.styleable.SwipeRevealLayout_leftIconBgColor,
                     ContextCompat.getColor(context, R.color.greyFavourite))
-            revealedRightViewColor = a.getColor(R.styleable.SwipeRevealLayout_rightIconBgColor,
+
+            revealedViewColor = a.getColor(R.styleable.SwipeRevealLayout_revealedIconBgColor,
+                    ContextCompat.getColor(context, R.color.greyFavourite))
+
+
+            revealedViewEndColor = a.getColor(R.styleable.SwipeRevealLayout_revealedIconEndBgColor,
                     ContextCompat.getColor(context, R.color.redDelete))
+
             revealedViewBackground = a.getResourceId(
                     R.styleable.SwipeRevealLayout_revealedViewBackground,
                     android.R.color.transparent
             )
 
-            distanceBetweenIcons = a.getDimensionPixelSize(
-                    R.styleable.SwipeRevealLayout_iconsDistance, resources.getDimensionPixelSize(R.dimen.default_icons_distance))
             iconPadding = a.getDimensionPixelSize(R.styleable.SwipeRevealLayout_iconsPadding, resources.getDimensionPixelSize(R.dimen.default_icons_padding))
-            revealedIconsSize = a.getDimensionPixelSize(R.styleable.SwipeRevealLayout_iconsSize, resources.getDimensionPixelSize(R.dimen.default_icons_size))
+            revealedIconsSize = a.getDimensionPixelSize(R.styleable.SwipeRevealLayout_iconsSize,
+                    resources.getDimensionPixelSize(R.dimen.default_icons_size))
             revealedMarginStart = a.getDimensionPixelSize(
                     R.styleable.SwipeRevealLayout_revealedViewMarginStart, resources.getDimensionPixelSize(R.dimen.default_icons_margin))
             revealedMarginEnd = a.getDimensionPixelSize(
@@ -171,19 +170,17 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
                     MATCH_PARENT
             )
 
-            rightViewColor = revealedRightViewColor
-            leftViewColor = revealedLeftViewColor
+            viewColor = revealedViewColor
+            endViewColor = revealedViewEndColor
             connectorColor = revealedConnectorViewColor
 
-            leftIconResId = leftIconRes
-            rightIconResId = rightIconRes
+            iconResId = iconRes
 
             setBackgroundResource(revealedViewBackground)
 
             configureIconsView(
                     revealedMarginStart,
                     revealedMarginEnd,
-                    distanceBetweenIcons,
                     revealedIconsSize,
                     iconPadding
             )
@@ -253,9 +250,9 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
                 dragEdge = dragEdge,
                 rectMainClose = rectMainClose,
                 rectMainOpen = rectMainOpen,
-                halfwayPivotHorizontal = getHalfwayPivotHorizontal(),
                 minFlingVelocity = minFlingVelocity
         )
+
         dragHelper = ViewDragHelper.create(this, 1.0f, dragHelperCallback)
         dragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_ALL)
     }
@@ -332,12 +329,6 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
             }
 
             child.layout(left, top, right, bottom)
-        }
-
-        when (dragEdge) {
-            DRAG_EDGE_LEFT -> secondaryView.offsetLeftAndRight(-secondaryView.width)
-
-            DRAG_EDGE_RIGHT -> secondaryView.offsetLeftAndRight(secondaryView.width)
         }
 
         initRects()
@@ -543,11 +534,7 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
     }
 
     private fun getSecOpenLeft(): Int {
-        return if (dragEdge == DRAG_EDGE_LEFT) {
-            rectSecClose.left + secondaryView.width
-        } else {
-            rectSecClose.left - secondaryView.width
-        }
+        return rectSecClose.left
     }
 
     private fun getSecOpenTop(): Int {
@@ -645,13 +632,5 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
         }
 
         return 0
-    }
-
-    private fun getHalfwayPivotHorizontal(): Int {
-        return if (dragEdge == DRAG_EDGE_LEFT) {
-            rectMainClose.left + secondaryView.width / 2
-        } else {
-            rectMainClose.right - secondaryView.width / 2
-        }
     }
 }

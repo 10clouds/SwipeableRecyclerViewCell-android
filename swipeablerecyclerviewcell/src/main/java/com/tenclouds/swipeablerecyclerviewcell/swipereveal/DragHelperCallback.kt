@@ -1,6 +1,7 @@
 package com.tenclouds.swipeablerecyclerviewcell.swipereveal
 
 import android.graphics.Rect
+import android.graphics.drawable.GradientDrawable
 import android.support.v4.view.ViewCompat
 import android.support.v4.widget.ViewDragHelper
 import android.view.View
@@ -23,7 +24,6 @@ internal class DragHelperCallback(
         var dragEdge: Int,
         var rectMainClose: Rect,
         var rectMainOpen: Rect,
-        var halfwayPivotHorizontal: Int,
         var minFlingVelocity: Int
 
 ) : ViewDragHelper.Callback() {
@@ -61,7 +61,7 @@ internal class DragHelperCallback(
         val velRightExceeded = pxToDp(xvel.toInt(), releasedChild.context) >= minFlingVelocity
         val velLeftExceeded = pxToDp(xvel.toInt(), releasedChild.context) <= -minFlingVelocity
 
-        val pivotHorizontal = halfwayPivotHorizontal
+        val pivotHorizontal = getHalfwayPivotHorizontal()
 
         when (dragEdge) {
             DRAG_EDGE_RIGHT -> if (velRightExceeded) {
@@ -90,6 +90,14 @@ internal class DragHelperCallback(
         }
     }
 
+    private fun getHalfwayPivotHorizontal(): Int {
+        return if (dragEdge == DRAG_EDGE_LEFT) {
+            rectMainClose.left + secondaryView.width / 2
+        } else {
+            rectMainClose.right - secondaryView.width / 2
+        }
+    }
+
     override fun onEdgeDragStarted(edgeFlags: Int, pointerId: Int) {
         if (lockDrag()) return
         super.onEdgeDragStarted(edgeFlags, pointerId)
@@ -107,6 +115,7 @@ internal class DragHelperCallback(
             }
 
             val revealProgress = abs(left.toFloat() / secondaryView.width)
+
             //notify children view about sliding
             (secondaryView as? AnimatedRevealView)?.reveal(revealProgress)
             //notify the user
@@ -117,12 +126,13 @@ internal class DragHelperCallback(
         lastMainLeft = mainView.left
         lastMainTop = mainView.top
 
-
+        //TODO 06.02.2019 Dawid Jamroży probably remove later, this behaviour is not desirable now
+        /*
         if (dragEdge == DRAG_EDGE_LEFT || dragEdge == DRAG_EDGE_RIGHT) {
             secondaryView.offsetLeftAndRight(dx)
         } else {
             secondaryView.offsetTopAndBottom(dy)
-        }
+        }*/
 
         //call invalidate
         ViewCompat.postInvalidateOnAnimation(changedView.parent as View)
