@@ -33,7 +33,7 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
     private var destinationPoint: Point = Point()
     private var originPoint: Point = Point()
 
-    private val startWhenProgress = 0.8f
+    private val startWhenProgress = 0.4f
 
     private var startingOriginX: Float = 0f
     private var startingRevealedParentX: Float = 0f
@@ -60,13 +60,12 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
             ContextCompat.getColor(context, R.color.greyFavourite))
     { _, _, new -> connectorPaint.color = new }
 
-    var iconResId: Int by Delegates.observable(
-            R.drawable.ic_delete)
+    var iconResId: Int by Delegates.observable(R.drawable.ic_delete)
     { _, _, new -> centerView.setImageResource(new) }
 
     private var movementProgress = 0f
         set(value) {
-            val startWhenProgress = 0.6f
+            val startWhenProgress = 0.4f
             val diffRangeLimitOne = 1 - startWhenProgress
             field =
                     if (value in 0.0f..startWhenProgress) 0f
@@ -97,12 +96,8 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
                            iconsMarginEnd: Int,
                            iconsSize: Int,
                            iconsPadding: Int) {
-        val minMargin = iconsSize * maxViewScale - iconsSize
-        val startMargin = max(minMargin.toInt(), iconsMarginStart)
-        val endMargin = max(minMargin.toInt(), iconsMarginEnd)
-
         val rightLp = LinearLayout.LayoutParams(iconsSize, iconsSize)
-                .apply { setMargins(startMargin, 0, endMargin, 0) }
+                .apply { setMargins(iconsMarginStart, 0, iconsMarginEnd, 0) }
 
         centerView.apply {
             layoutParams = rightLp
@@ -118,7 +113,6 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
         configureClickListeners()
     }
 
-
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         post {
             initValues()
@@ -129,7 +123,7 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
 
     private fun initValues() {
         originPoint = centerView.getCenter()
-//        destinationPoint = leftView.getCenter()
+        //destinationPoint = leftView.getCenter()
         transitionDistance = destinationPoint.x - originPoint.x
         startingOriginX = originPoint.x
         startingRevealedParentX = 0f
@@ -199,10 +193,6 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
     }
 
     override fun dispatchDraw(canvas: Canvas) {
-        /*Log.d("MetaBalls", "originPoint x" + originPoint.x)
-        Log.d("MetaBalls", "originPoint y" + originPoint.y)
-        Log.d("MetaBalls", "centerCircle.radius" + centerCircle.radius)
-        Log.d("MetaBalls", "centerCircle.paint" + centerCircle.paint)*/
         canvas.drawCircle(
                 originPoint.x,
                 originPoint.y,
@@ -229,7 +219,6 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
     }
 
     private fun calculateValuesDependingOnMovementProgress(progress: Float) {
-        /*leftCircle.radius = getRadiusDependingOnViewPosition(progress)*/
         val radius = getRadiusDependingOnViewPosition(progress)
         Log.d("radius", radius.toString())
         centerCircle.radius = radius
@@ -238,12 +227,12 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
 
         connectorPaint.alpha = connectorPaintAlpha(progress)
 
-/*        blobConnectorData = calculateBlobConnector(leftCircle.radius, originPoint, destinationPoint)*/
+        /*blobConnectorData = calculateBlobConnector(centerCircle.radius, originPoint, destinationPoint)
 
-/*        calculateViewPosition(leftView, destinationPoint)
+        calculateViewPosition(leftView, destinationPoint)
 
-        calculateViewScale(progress, leftView)*/
-        calculateViewScale(progress, centerView)
+        calculateViewScale(progress, leftView)
+        calculateViewScale(progress, centerView)*/
     }
 
     private fun calculateValuesForDeleteAnimation(progress: Float, startingX: Float) {
@@ -255,9 +244,20 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
         calculateViewPosition(centerView, originPoint)
     }
 
+    private var currentCanvasRadius = 0f
+
     private fun getRadiusDependingOnViewPosition(progress: Float): Float {
-//        Log.d("progress", progress.toString())
-        return if (movementProgress < startWhenProgress) {
+        // should decrease size
+        return if(movementProgress < startWhenProgress) {
+            currentCanvasRadius = calculatedSelectorRadius - (progress * 60)
+            currentCanvasRadius
+        } else {
+            //should increase size
+            currentCanvasRadius + ((progress - startWhenProgress) * 60)
+        }
+
+        // old code
+        /*return if (movementProgress < 0.4f) {
             //max 1.6f
             val scale = (0.8f + (abs(progress - startWhenProgress)))
             Log.d("start", scale.toString())
@@ -265,7 +265,7 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
         } else {
             Log.d("end", calculatedSelectorRadius.toString())
             calculatedSelectorRadius
-        }
+        }*/
     }
 
     private fun calculateViewPosition(view: View, destination: Point) {
@@ -343,5 +343,4 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
 
         return ConnectorHolder(p1a, p2a, p1b, p2b, segment1, segment2, segment3, segment4)
     }
-
 }

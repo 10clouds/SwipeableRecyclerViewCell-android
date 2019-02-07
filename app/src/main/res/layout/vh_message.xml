@@ -15,90 +15,97 @@
         android:layout_height="wrap_content"
         app:dragFromEdge="right"
         app:icon="@drawable/ic_delete"
-        app:iconsPadding="10dp"
-        app:iconsSize="45dp"
+        app:iconsPadding="20dp"
+        app:iconsSize="70dp"
         app:opened="@{item.viewOpened}"
         app:revealedIconBgColor="@color/charcolarGreyItemBackground"
         app:revealedViewBackground="@android:color/transparent"
-        app:revealedViewMarginEnd="24dp"
-        app:revealedViewMarginStart="24dp"
+        app:revealedViewMarginEnd="20dp"
+        app:revealedViewMarginStart="5dp"
         tools:background="@color/greyFavourite">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/vBg"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_rounded_corners_message"
-            android:clickable="true"
-            android:focusable="true"
-            android:minHeight="80dp"
-            android:paddingStart="16dp"
-            android:paddingTop="22dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="22dp">
+            android:layout_height="wrap_content">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/ivAvatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                app:drawableSrc="@{item.avatar}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:src="@drawable/avatar1" />
-
-            <TextView
-                android:id="@+id/tvTitle"
-                style="@style/MediumTextView"
-                android:layout_width="wrap_content"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/vBg"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:ellipsize="end"
-                android:text="@{item.title}"
-                android:textColor="@color/textItemTitle"
-                android:textSize="@dimen/medium_font"
-                app:layout_constraintBottom_toTopOf="@id/tvMessage"
-                app:layout_constraintStart_toEndOf="@+id/ivAvatar"
-                app:layout_constraintTop_toTopOf="@id/vBg"
-                tools:text="Eric Snyder" />
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/bg_rounded_corners_message"
+                android:clickable="true"
+                android:focusable="true"
+                android:minHeight="80dp"
+                android:paddingStart="16dp"
+                android:paddingTop="22dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="22dp">
 
-            <TextView
-                android:id="@+id/tvMessage"
-                style="@style/RegularTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:lineSpacingExtra="4dp"
-                android:text="@{item.message}"
-                android:textColor="@color/textColor"
-                android:textSize="@dimen/small_font"
-                app:layout_constraintBottom_toBottomOf="@id/vBg"
-                app:layout_constraintStart_toStartOf="@id/tvTitle"
-                app:layout_constraintTop_toBottomOf="@id/tvTitle"
-                tools:text="is a fir native to the mountains…\n21 items | London UK" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ivAvatar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:drawableSrc="@{item.avatar}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/avatar1" />
 
-            <TextView
-                android:id="@+id/tvStatus"
-                style="@style/BoldTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:textColor="@color/red"
-                android:textSize="@dimen/small_font"
-                app:layout_constraintBaseline_toBaselineOf="@id/tvTitle"
-                app:layout_constraintStart_toEndOf="@id/tvTitle"
-                app:workStatus="@{item.status}"
-                tools:text="&#8226; Work" />
+                <TextView
+                    android:id="@+id/tvTitle"
+                    style="@style/MediumTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:ellipsize="end"
+                    android:text="@{item.title}"
+                    android:textColor="@color/textItemTitle"
+                    android:textSize="@dimen/medium_font"
+                    app:layout_constraintBottom_toTopOf="@id/tvMessage"
+                    app:layout_constraintStart_toEndOf="@+id/ivAvatar"
+                    app:layout_constraintTop_toTopOf="@id/vBg"
+                    tools:text="Eric Snyder" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_more" />
+                <TextView
+                    android:id="@+id/tvMessage"
+                    style="@style/RegularTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="@{item.message}"
+                    android:textColor="@color/textColor"
+                    android:textSize="@dimen/small_font"
+                    app:layout_constraintBottom_toBottomOf="@id/vBg"
+                    app:layout_constraintStart_toStartOf="@id/tvTitle"
+                    app:layout_constraintTop_toBottomOf="@id/tvTitle"
+                    tools:text="is a fir native to the mountains…\n21 items | London UK" />
 
-        </android.support.constraint.ConstraintLayout>
+                <TextView
+                    android:id="@+id/tvStatus"
+                    style="@style/BoldTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/small_font"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tvTitle"
+                    app:layout_constraintStart_toEndOf="@id/tvTitle"
+                    app:workStatus="@{item.status}"
+                    tools:text="&#8226; Work" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_more" />
+
+            </android.support.constraint.ConstraintLayout>
+
+        </FrameLayout>
     </com.tenclouds.swipeablerecyclerviewcell.swipereveal.SwipeRevealLayout>
 </layout>
