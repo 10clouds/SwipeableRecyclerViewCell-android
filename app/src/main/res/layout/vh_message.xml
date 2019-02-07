@@ -21,7 +21,7 @@
         app:revealedIconBgColor="@color/charcolarGreyItemBackground"
         app:revealedViewBackground="@android:color/transparent"
         app:revealedViewMarginEnd="20dp"
-        app:revealedViewMarginStart="5dp"
+        app:revealedViewMarginStart="10dp"
         tools:background="@color/greyFavourite">
 
         <FrameLayout

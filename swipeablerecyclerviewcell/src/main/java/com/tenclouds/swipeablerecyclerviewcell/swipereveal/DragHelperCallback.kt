@@ -112,6 +112,7 @@ internal class DragHelperCallback(
                 onSwipeListener?.onClosed()
             } else if (mainView.left == rectMainOpen.left && mainView.top == rectMainOpen.top) {
                 onSwipeListener?.onOpened()
+                (secondaryView as? AnimatedRevealView)?.opened()
             }
 
             val revealProgress = abs(left.toFloat() / secondaryView.width)
@@ -125,14 +126,6 @@ internal class DragHelperCallback(
 
         lastMainLeft = mainView.left
         lastMainTop = mainView.top
-
-        //TODO 06.02.2019 Dawid Jamroży probably remove later, this behaviour is not desirable now
-        /*
-        if (dragEdge == DRAG_EDGE_LEFT || dragEdge == DRAG_EDGE_RIGHT) {
-            secondaryView.offsetLeftAndRight(dx)
-        } else {
-            secondaryView.offsetTopAndBottom(dy)
-        }*/
 
         //call invalidate
         ViewCompat.postInvalidateOnAnimation(changedView.parent as View)

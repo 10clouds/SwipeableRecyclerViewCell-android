@@ -1,24 +1,24 @@
 package com.tenclouds.swipeablerecyclerviewcell.metaball
 
 import android.animation.AnimatorSet
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
-import com.tenclouds.swipeablerecyclerviewcell.R
 import com.tenclouds.swipeablerecyclerviewcell.swipereveal.SwipeRevealLayout
 import com.tenclouds.swipeablerecyclerviewcell.swipereveal.interfaces.AnimatedRevealView
 import com.tenclouds.swipeablerecyclerviewcell.swipereveal.interfaces.OnDeleteListener
 import com.tenclouds.swipeablerecyclerviewcell.utils.*
 import kotlin.math.*
 import kotlin.properties.Delegates
+
 
 const val LEFT_VIEW_TO_DELETE = 1
 const val RIGHT_VIEW_TO_DELETE = 2
@@ -41,26 +41,28 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
     private lateinit var centerView: ImageView
 
     private var blobConnectorData: ConnectorHolder? = null
+    private var secondCircleRadius = 0f
+    private var secondCircleTranslation = 0f
     private var transitionDistance = 0.0f
     private var centerCircle = Circle()
 
     private val maxViewScale = 1.2f
 
-    var endViewColor: Int = R.color.redDelete
+    var endViewColor: Int = com.tenclouds.swipeablerecyclerviewcell.R.color.redDelete
 
     var deleteView = NONE_VIEW_TO_DELETE
 
     private val connectorPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
 
     var viewColor: Int by Delegates.observable(
-            ContextCompat.getColor(context, R.color.greyFavourite))
+            ContextCompat.getColor(context, com.tenclouds.swipeablerecyclerviewcell.R.color.greyFavourite))
     { _, _, new -> centerCircle.paint.color = new }
 
     var connectorColor: Int by Delegates.observable(
-            ContextCompat.getColor(context, R.color.greyFavourite))
+            ContextCompat.getColor(context, com.tenclouds.swipeablerecyclerviewcell.R.color.greyFavourite))
     { _, _, new -> connectorPaint.color = new }
 
-    var iconResId: Int by Delegates.observable(R.drawable.ic_delete)
+    var iconResId: Int by Delegates.observable(com.tenclouds.swipeablerecyclerviewcell.R.drawable.ic_delete)
     { _, _, new -> centerView.setImageResource(new) }
 
     private var movementProgress = 0f
@@ -123,7 +125,6 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
 
     private fun initValues() {
         originPoint = centerView.getCenter()
-        //destinationPoint = leftView.getCenter()
         transitionDistance = destinationPoint.x - originPoint.x
         startingOriginX = originPoint.x
         startingRevealedParentX = 0f
@@ -188,15 +189,55 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
         movementProgress = howMuchToReveal
 
         calculateValuesDependingOnMovementProgress(movementProgress)
+        calculateSecondCircleTranslationDependingOnMovementProgress(movementProgress)
+        calculateSecondCircleRadiusDependingOnMovementProgress(movementProgress)
+
+        invalidate()
+    }
+
+    //TODO 07.02.2019 Dawid Jamroży change paint color and animate
+    override fun opened() {
+        val paint = Paint()
+        paint.color = ContextCompat.getColor(context, com.tenclouds.swipeablerecyclerviewcell.R.color.redDelete)
+        centerCircle.paint = paint
+
+        val centerCircleRadius = centerCircle.radius
+
+        //TODO 07.02.2019 Dawid Jamroży 
+        ValueAnimator.ofFloat(0f, 40f).apply {
+            repeatMode = ValueAnimator.REVERSE
+            duration = 400
+            addUpdateListener { updatedAnimation ->
+                val i = updatedAnimation.animatedValue as Float
+
+                if(i <= 20) {
+                    centerCircle.radius = centerCircleRadius + i
+                } else {
+                    centerCircle.radius = centerCircleRadius + (40 - i)
+                }
+
+                invalidate()
+            }
+            start()
+        }
 
         invalidate()
     }
 
     override fun dispatchDraw(canvas: Canvas) {
+        // main circle with icon
         canvas.drawCircle(
                 originPoint.x,
                 originPoint.y,
                 centerCircle.radius,
+                centerCircle.paint
+        )
+
+        // second smaller circle
+        canvas.drawCircle(
+                originPoint.x - secondCircleTranslation,
+                originPoint.y,
+                centerCircle.radius - secondCircleRadius,
                 centerCircle.paint
         )
 
@@ -218,9 +259,30 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
         super.dispatchDraw(canvas)
     }
 
+    private fun calculateValuesOfSecondCanvas(progress: Float) {
+        val radius = 0f
+        val translationX = 0f
+    }
+
+    private fun calculateSecondCircleRadiusDependingOnMovementProgress(progress: Float) {
+        secondCircleRadius = if (movementProgress < 0.5f) {
+            (progress * 40)
+        } else {
+            (1 - progress) * 40
+        }
+    }
+
+    private fun calculateSecondCircleTranslationDependingOnMovementProgress(progress: Float) {
+        secondCircleTranslation = if (movementProgress < 0.5f) {
+            progress * 170
+        } else {
+            (1 - progress) * 170
+        }
+    }
+
     private fun calculateValuesDependingOnMovementProgress(progress: Float) {
         val radius = getRadiusDependingOnViewPosition(progress)
-        Log.d("radius", radius.toString())
+
         centerCircle.radius = radius
 
         destinationPoint.x = originPoint.x + transitionDistance * progress
@@ -248,12 +310,15 @@ internal class MetaBalls : LinearLayout, AnimatedRevealView {
 
     private fun getRadiusDependingOnViewPosition(progress: Float): Float {
         // should decrease size
-        return if(movementProgress < startWhenProgress) {
-            currentCanvasRadius = calculatedSelectorRadius - (progress * 60)
+        return if (movementProgress < startWhenProgress) {
+            currentCanvasRadius = calculatedSelectorRadius - (progress * 70)
+            currentCanvasRadius
+        } else if (movementProgress > startWhenProgress && movementProgress < 0.7f) {
+            // should keep same radius
             currentCanvasRadius
         } else {
             //should increase size
-            currentCanvasRadius + ((progress - startWhenProgress) * 60)
+            currentCanvasRadius + ((progress - 0.7f) * 70)
         }
 
         // old code
