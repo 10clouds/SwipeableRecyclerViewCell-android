@@ -16,6 +16,7 @@ import kotlin.math.abs
  */
 
 internal class DragHelperCallback(
+        var asd: SwipeRevealLayout,
         var lockDrag: () -> Boolean,
         var mainView: View,
         var openCloseListener: OpenCloseListener?,
@@ -117,6 +118,7 @@ internal class DragHelperCallback(
 
             val revealProgress = abs(left.toFloat() / secondaryView.width)
 
+            asd.onProgress(revealProgress)
             //notify children view about sliding
             (secondaryView as? AnimatedRevealView)?.reveal(revealProgress)
             //notify the user

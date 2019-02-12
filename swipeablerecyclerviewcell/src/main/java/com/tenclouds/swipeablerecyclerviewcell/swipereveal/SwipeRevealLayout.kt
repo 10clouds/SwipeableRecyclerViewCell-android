@@ -2,7 +2,9 @@ package com.tenclouds.swipeablerecyclerviewcell.swipereveal
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Rect
+import android.graphics.*
+import android.graphics.Paint.ANTI_ALIAS_FLAG
+import android.graphics.drawable.BitmapDrawable
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GestureDetectorCompat
 import android.support.v4.view.ViewCompat
@@ -14,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import com.tenclouds.swipeablerecyclerviewcell.R
 import com.tenclouds.swipeablerecyclerviewcell.metaball.MetaBalls
@@ -35,6 +38,11 @@ private const val DEFAULT_MIN_FLING_VELOCITY = 300 // dp per second
 private const val DEFAULT_MIN_DIST_REQUEST_DISALLOW_PARENT = 1 // dp
 
 class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
+
+    companion object {
+        private const val MAX_REVEAL_PROGRESS = 0.85f
+    }
+
     private lateinit var mainView: View
     private lateinit var secondaryView: View
 
@@ -57,7 +65,7 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
 
     private var revealedViewColor = 0
     private var revealedViewEndColor = 0
-    private var revealedConnectorViewColor = 0
+    private var itemBackgroundColor = 0
     private var revealedViewBackground = 0
     private var revealedIconsSize = 0
     private var revealedMarginStart = 0
@@ -130,15 +138,13 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
 
             dragEdge = a.getInteger(R.styleable.SwipeRevealLayout_dragFromEdge, DRAG_EDGE_LEFT)
 
-            iconRes = a.getResourceId(R.styleable.SwipeRevealLayout_icon,
-                    R.drawable.ic_delete)
-            R.styleable.SwipeRevealLayout_revealedViewBackground
-            revealedConnectorViewColor = a.getColor(R.styleable.SwipeRevealLayout_connectorColor,
+            iconRes = a.getResourceId(R.styleable.SwipeRevealLayout_icon, R.drawable.ic_delete)
+
+            itemBackgroundColor = a.getColor(R.styleable.SwipeRevealLayout_itemBackgroundColor,
                     ContextCompat.getColor(context, R.color.greyFavourite))
 
             revealedViewColor = a.getColor(R.styleable.SwipeRevealLayout_revealedIconBgColor,
                     ContextCompat.getColor(context, R.color.greyFavourite))
-
 
             revealedViewEndColor = a.getColor(R.styleable.SwipeRevealLayout_revealedIconEndBgColor,
                     ContextCompat.getColor(context, R.color.redDelete))
@@ -170,9 +176,9 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
                     MATCH_PARENT
             )
 
+            dragFromEdge = dragEdge
             viewColor = revealedViewColor
             endViewColor = revealedViewEndColor
-            connectorColor = revealedConnectorViewColor
 
             iconResId = iconRes
 
@@ -242,6 +248,7 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
 
     private fun initDragHelper() {
         val dragHelperCallback = DragHelperCallback(
+                this,
                 lockDrag = { lockDrag },
                 openCloseListener = this,
                 onSwipeListener = onSwipeListener,
@@ -632,5 +639,109 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
         }
 
         return 0
+    }
+
+    private var revealProgress = 0.0f
+    private var bitmap: Bitmap? = null
+    private var bitmapCanvas: Canvas? = null
+
+    private val paint: Paint by lazy {
+        Paint(ANTI_ALIAS_FLAG)
+                .apply {
+                    strokeWidth = 10f
+                    isDither = true
+                    strokeJoin = Paint.Join.ROUND
+                    strokeCap = Paint.Cap.ROUND
+                    isAntiAlias = true
+                    pathEffect = CornerPathEffect(5f) // not working
+                    //TODO 12.02.2019 Dawid Jamroży get color from value set in .xml file
+                    color = ContextCompat.getColor(context, R.color.greyFavourite)
+                }
+    }
+
+    fun onProgress(progress: Float) {
+        revealProgress = if(progress > MAX_REVEAL_PROGRESS) MAX_REVEAL_PROGRESS else progress
+        invalidate()
+    }
+
+    private val constant = 1f
+
+    override fun dispatchDraw(canvas1: Canvas) {
+        super.dispatchDraw(canvas1)
+
+        //TODO 12.02.2019 Dawid Jamroży remove FrameLayout in order to handle only one main layout in .xml
+        /* settings margins to main layout framed by SwipeRevealLayout is causing improper behaviour
+           in that case canvas background should include margins set, for example in SwipeRevealLayout app:  */
+        val child = (getChildAt(1) as FrameLayout).getChildAt(0)
+
+        val width = child.width.toFloat()
+        val height = child.height.toFloat()
+        val halfHeight = height.div(2)
+
+        if (bitmap == null) {
+            bitmap = Bitmap.createBitmap(width.toInt(),
+                    height.toInt(),
+                    Bitmap.Config.ARGB_8888)
+
+            bitmapCanvas = Canvas(bitmap)
+        }
+
+        bitmapCanvas?.drawColor(
+                Color.TRANSPARENT,
+                PorterDuff.Mode.CLEAR)
+
+        //TODO 12.02.2019 Dawid Jamroży replace by one path and handle both side DRAG_EDGE functionality
+        // upper shape path
+        with(Path()) {
+
+            moveTo(0f, 0f)
+
+            if (revealProgress in 0.0f..0.5f) {
+                lineTo(width - revealProgress.div(constant).times(width), 0f)
+
+                cubicTo(width * (1 - revealProgress.div(10)), 0f,
+                        width * (1 - revealProgress.div(10)), halfHeight,
+                        width * (1 - revealProgress.div(40)), halfHeight)
+            } else {
+
+                lineTo(width - (((1 - revealProgress) / constant) * width), 0f)
+
+                cubicTo(width - (1 - revealProgress).times(width * 0.1f), 0f,
+                        width - (1 - revealProgress).times(width * 0.1f), halfHeight,
+                        width * (1 - ((1 - revealProgress) / 40)), halfHeight)
+            }
+
+            lineTo(0f, height.div(2))
+            close()
+
+            bitmapCanvas?.drawPath(this, paint)
+        }
+
+        // bottoms shape path
+        with(Path()) {
+            moveTo(0f, height)
+
+            if (revealProgress in 0.0f..0.5f) {
+                lineTo(width - ((revealProgress / constant) * width), height)
+
+                cubicTo(width * (1 - (revealProgress / 10)), height,
+                        width * (1 - (revealProgress / 10)), halfHeight,
+                        width * (1 - (revealProgress / 40)), halfHeight)
+            } else {
+
+                lineTo(width - (((1 - revealProgress) / constant) * width), height)
+
+                cubicTo(width - (1 - revealProgress).times(width * 0.1f), height,
+                        width - (1 - revealProgress).times(width * 0.1f), halfHeight,
+                        width * (1 - ((1 - revealProgress) / 40)), halfHeight)
+            }
+
+            lineTo(0f, halfHeight)
+            close()
+
+            bitmapCanvas?.drawPath(this, paint)
+        }
+
+        child.background = BitmapDrawable(resources, bitmap)
     }
 }

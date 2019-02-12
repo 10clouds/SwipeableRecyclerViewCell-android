@@ -14,7 +14,6 @@ internal data class Point(var x: Float = 0.0f,
 
 internal data class Circle(var position: Point = Point(),
                            var radius: Float = 0f,
-                           //TODO 07.02.2019 Dawid Jamroży change to val if possible
                            var paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
                                    .apply { style = Paint.Style.FILL })
 

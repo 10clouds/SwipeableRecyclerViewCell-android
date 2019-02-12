@@ -8,9 +8,9 @@
 
         <attr name="opened" format="boolean" />
 
-        <attr name="revealedIconEndBgColor" format="color" />
-        <attr name="revealedIconBgColor" format="color" />
-        <attr name="connectorColor" format="color" />
+        <attr name="revealedIconEndBgColor" format="reference|color" />
+        <attr name="revealedIconBgColor" format="reference|color" />
+        <attr name="itemBackgroundColor" format="reference|color" />
 
         <attr name="icon" format="reference" />
 
