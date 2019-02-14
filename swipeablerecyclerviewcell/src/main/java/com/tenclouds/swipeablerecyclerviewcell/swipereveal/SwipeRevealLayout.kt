@@ -27,6 +27,7 @@ import com.tenclouds.swipeablerecyclerviewcell.swipereveal.interfaces.OnSwipeLis
 import com.tenclouds.swipeablerecyclerviewcell.swipereveal.interfaces.OpenCloseListener
 import com.tenclouds.swipeablerecyclerviewcell.utils.generateViewId
 
+
 /**
  * Stripped down version of: https://github.com/chthai64/SwipeRevealLayout
  */
@@ -660,18 +661,22 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
     }
 
     fun onProgress(progress: Float) {
-        revealProgress = if(progress > MAX_REVEAL_PROGRESS) MAX_REVEAL_PROGRESS else progress
+        revealProgress = if (progress > MAX_REVEAL_PROGRESS) MAX_REVEAL_PROGRESS else progress
         invalidate()
     }
 
-    private val constant = 1f
+    /**
+     * The constant value responsible for beginning of X path breaking point
+     *  > 1.0 breaking point closet to 0 value, < 1.0 breaking point is further to 0 value
+     */
+    private val constant = 1.1f
 
     override fun dispatchDraw(canvas1: Canvas) {
         super.dispatchDraw(canvas1)
 
         //TODO 12.02.2019 Dawid Jamroży remove FrameLayout in order to handle only one main layout in .xml
         /* settings margins to main layout framed by SwipeRevealLayout is causing improper behaviour
-           in that case canvas background should include margins set, for example in SwipeRevealLayout app:  */
+           in that case canvas background should include margins set, for example in SwipeRevealLayout app:setMargin  */
         val child = (getChildAt(1) as FrameLayout).getChildAt(0)
 
         val width = child.width.toFloat()
@@ -690,58 +695,51 @@ class SwipeRevealLayout : ViewGroup, OnDeleteListener, OpenCloseListener {
                 Color.TRANSPARENT,
                 PorterDuff.Mode.CLEAR)
 
-        //TODO 12.02.2019 Dawid Jamroży replace by one path and handle both side DRAG_EDGE functionality
-        // upper shape path
         with(Path()) {
+
+            val xPointOne: Float
+            val xPointTwo: Float
+            val xPointThree: Float
+
+            if (revealProgress in 0.0f..0.5f) {
+                xPointOne = width.minus(revealProgress.div(constant).times(width))
+                xPointTwo = width.times(1.minus(revealProgress.div(10)))
+                xPointThree = width.times(1.minus(revealProgress.div(40)))
+            } else {
+                xPointOne = width.minus(1.minus(revealProgress).div(constant).times(width))
+                xPointTwo = width.minus(1.minus(revealProgress).times(width.div(10)))
+                xPointThree = width.times(1.minus(1.minus(revealProgress).div(40)))
+            }
 
             moveTo(0f, 0f)
 
-            if (revealProgress in 0.0f..0.5f) {
-                lineTo(width - revealProgress.div(constant).times(width), 0f)
+            lineTo(xPointOne, 0f)
 
-                cubicTo(width * (1 - revealProgress.div(10)), 0f,
-                        width * (1 - revealProgress.div(10)), halfHeight,
-                        width * (1 - revealProgress.div(40)), halfHeight)
-            } else {
+            cubicTo(xPointTwo, 0f,
+                    xPointTwo, halfHeight,
+                    xPointThree, halfHeight)
 
-                lineTo(width - (((1 - revealProgress) / constant) * width), 0f)
+            cubicTo(xPointTwo, halfHeight,
+                    xPointTwo, height,
+                    xPointOne, height)
 
-                cubicTo(width - (1 - revealProgress).times(width * 0.1f), 0f,
-                        width - (1 - revealProgress).times(width * 0.1f), halfHeight,
-                        width * (1 - ((1 - revealProgress) / 40)), halfHeight)
-            }
+            lineTo(0f, height)
 
-            lineTo(0f, height.div(2))
             close()
-
             bitmapCanvas?.drawPath(this, paint)
         }
 
-        // bottoms shape path
-        with(Path()) {
-            moveTo(0f, height)
+        //TODO 14.02.2019 Dawid Jamroży try to find better way to reflect path vertically
+        child.background = BitmapDrawable(resources,
+                if(dragEdge == DRAG_EDGE_LEFT)
+                    rotateBitmap(bitmap, width, height)
+                else
+                    bitmap
+        )
+    }
 
-            if (revealProgress in 0.0f..0.5f) {
-                lineTo(width - ((revealProgress / constant) * width), height)
-
-                cubicTo(width * (1 - (revealProgress / 10)), height,
-                        width * (1 - (revealProgress / 10)), halfHeight,
-                        width * (1 - (revealProgress / 40)), halfHeight)
-            } else {
-
-                lineTo(width - (((1 - revealProgress) / constant) * width), height)
-
-                cubicTo(width - (1 - revealProgress).times(width * 0.1f), height,
-                        width - (1 - revealProgress).times(width * 0.1f), halfHeight,
-                        width * (1 - ((1 - revealProgress) / 40)), halfHeight)
-            }
-
-            lineTo(0f, halfHeight)
-            close()
-
-            bitmapCanvas?.drawPath(this, paint)
-        }
-
-        child.background = BitmapDrawable(resources, bitmap)
+    private fun rotateBitmap(source: Bitmap?, width: Float, height: Float): Bitmap? {
+        val matrix = Matrix().apply { postScale(-1f, 1f, width / 2, height / 2) }
+        return Bitmap.createBitmap(source, 0, 0, source?.width ?: 0, source?.height ?: 0, matrix, true)
     }
 }

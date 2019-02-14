@@ -13,7 +13,7 @@
     <com.tenclouds.swipeablerecyclerviewcell.swipereveal.SwipeRevealLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:dragFromEdge="right"
+        app:dragFromEdge="left"
         app:icon="@drawable/ic_delete"
         app:iconsPadding="20dp"
         app:iconsSize="70dp"
