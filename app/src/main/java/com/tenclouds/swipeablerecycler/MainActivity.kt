@@ -30,8 +30,8 @@ class MainActivity : AppCompatActivity() {
                     message = "is a fir native to the mountains…",
                     avatar = R.drawable.avatar1,
                     status = "Work"
-            ),
-            Message(
+            )
+            /*  Message(
                     id = 1,
                     title = "Diascia barberae",
                     message = "is a fir native to the mountains…",
@@ -65,6 +65,6 @@ class MainActivity : AppCompatActivity() {
                     message = "is a fir native to the mountains…\n21 items | London UK",
                     avatar = R.drawable.avatar2,
                     status = "Work"
-            )
+            )*/
     )
 }

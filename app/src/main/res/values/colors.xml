@@ -8,10 +8,12 @@
     <color name="charcolarGreyItemBackground">#353337</color>
     <color name="charcolarGrey2">#2f2f32</color>
     <color name="dark">#1a1a1e</color>
+    <color name="greyishBrown">#444444</color>
 
     <color name="textColor">#838383</color>
     <color name="textItemTitle">#dbdbdb</color>
     <color name="title">#b4bcc1</color>
+    <color name="white">#FFFFFF</color>
     <color name="red">#bb5462</color>
 
     <color name="redDelete">#9a3543</color>

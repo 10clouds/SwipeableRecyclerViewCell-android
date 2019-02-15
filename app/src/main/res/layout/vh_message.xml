@@ -13,60 +13,58 @@
     <com.tenclouds.swipeablerecyclerviewcell.swipereveal.SwipeRevealLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        app:connectorColor="@color/redDelete"
-        app:dragFromEdge="right"
-        app:iconsDistance="20dp"
-        app:iconsPadding="14dp"
-        app:iconsSize="40dp"
-        app:leftIcon="@drawable/ic_fav"
-        app:leftIconBgColor="@color/gretFavorite"
+        app:dragFromEdge="left"
+        app:icon="@drawable/ic_delete"
+        app:iconsPadding="20dp"
+        app:iconsSize="70dp"
         app:opened="@{item.viewOpened}"
+        app:revealedIconBgColor="@color/greyFavourite"
+        app:itemBackgroundColor="@color/greyFavourite"
         app:revealedViewBackground="@android:color/transparent"
-        app:revealedViewMarginEnd="24dp"
-        app:revealedViewMarginStart="0dp"
-        app:rightIcon="@drawable/ic_delete"
-        app:rightIconBgColor="@color/redDelete"
+        app:revealedViewMarginEnd="20dp"
+        app:revealedViewMarginStart="10dp"
         tools:background="@color/greyFavourite">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="horizontal"
-            android:paddingEnd="24dp"
-            android:paddingStart="24dp">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/ivAvatar"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="1dp"
-                app:drawableSrc="@{item.avatar}"
-                tools:src="@drawable/avatar1" />
+            android:layout_height="wrap_content">
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/vBg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/bg_rounded_corners_message"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:clickable="true"
+                android:focusable="true"
                 android:minHeight="80dp"
-                android:padding="22dp">
+                android:paddingStart="16dp"
+                android:paddingTop="22dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="22dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ivAvatar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:drawableSrc="@{item.avatar}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/avatar1" />
 
                 <TextView
                     android:id="@+id/tvTitle"
                     style="@style/MediumTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:ellipsize="end"
                     android:text="@{item.title}"
                     android:textColor="@color/textItemTitle"
                     android:textSize="@dimen/medium_font"
                     app:layout_constraintBottom_toTopOf="@id/tvMessage"
-                    app:layout_constraintStart_toStartOf="@id/vBg"
+                    app:layout_constraintStart_toEndOf="@+id/ivAvatar"
                     app:layout_constraintTop_toTopOf="@id/vBg"
                     tools:text="Eric Snyder" />
 
@@ -98,9 +96,16 @@
                     app:workStatus="@{item.status}"
                     tools:text="&#8226; Work" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_more" />
+
             </android.support.constraint.ConstraintLayout>
 
-        </LinearLayout>
-
+        </FrameLayout>
     </com.tenclouds.swipeablerecyclerviewcell.swipereveal.SwipeRevealLayout>
 </layout>
